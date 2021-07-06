@@ -273,7 +273,8 @@ controller.admissionWebhooks.enabled=false \
 controller.config."proxy-body-size"="10240m",\
 controller.config."proxy-send-timeout"="60",\
 controller.config."proxy-read-timeout"="1800"
-
+# 在n167部署ingress-controller，绑定80端口
+k label node n167.njuics.cn controller.ingress.io/enabled=true
 ```
 
 #### ingress示例
@@ -320,8 +321,9 @@ spec:
 
 #### ceph-csi
 ```
-helm add re
+helm repo add ceph-csi https://ceph.github.io/csi-charts
 kubectl create ns ceph-csi-cephfs
+cd ceph-csi-cephfs
 helm install --namespace "ceph-csi-cephfs" "ceph-csi-cephfs" ceph-csi/ceph-csi-cephfs -f charts/ceph-csi-cephfs/values167.yaml
 kubectl apply -f examples/cephfs/secret167.yaml 
 kubectl apply -f examples/cephfs/storageclass167.yaml 
@@ -378,9 +380,10 @@ EOF
 kubectl apply -f cephfs-sc.yaml -n cephfs
 ```
 ##### openldap
-```
+```shell
 k apply -f docker-openldap/example/kubernetes/simple
 k apply -f docker-phpLDAPadmin/example/kubernetes
+# 访问210.28.132.167:31111，导入ldapbackup.ldif
 k create -f dex/dex.yaml
 ```
 
@@ -403,7 +406,8 @@ helm install \
 
 ##### node-exporter
 见 https://github.com/Solomonwisdom/k8s-deploy/blob/master/gpu-node-exporter-daemonset.yaml
-```
+```shell
+# nvidia-driver<=450
 kubectl label node --all hardware-type=NVIDIAGPU
 kubectl apply -f gpu-node-exporter-daemonset.yaml
 ```
@@ -433,8 +437,8 @@ server.securityContext.runAsGroup=0,server.securityContext.fsGroup=0
 ```
 ##### dlkit
 ```shell
-cd cluster
-cp ./dlkit/values.yaml.tmpl ./dlkit/values.yaml
+cd dlkit-operator
+cp ./cluster/dlkit/values.yaml.tmpl ./cluster/dlkit/values.yaml
 helm install --namespace dlkit dlkit ./cluster/dlkit -f ./cluster/dlkit/values.yaml
 ```
 

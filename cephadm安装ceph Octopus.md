@@ -39,7 +39,7 @@ ceph fs volume create cephfs ics13
 mount.ceph 114.212.189.143,114.212.189.144,114.212.189.145,114.212.189.146:/ /mnt/cephfs -o name=admin,secret=AQB5yHpfwZjmERAAiRSVYFzFEatLT2mH2urD0g==
 ```
 
-```
+```shell
 yum install -y ntp ntpdate ntp-doc
 systemctl enable --now ntpd
 curl --silent --remote-name --location https://github.com/ceph/ceph/raw/octopus/src/cephadm/cephadm
@@ -60,6 +60,7 @@ ceph orch daemon add osd n168:/dev/sdd1
 ceph orch daemon add osd n169:/dev/sdd1
 ceph fs volume create cephfs n169,n168
 # ceph orch apply mds cephfs --placement=2 [*<host1>* ...]
+# 挂载ceph文件系统
 mount.ceph 210.28.132.167,210.28.132.168,210.28.132.169:/ /mnt/cephfs -o name=admin,secret=AQCndd1fPoXSKBAANC6ixLlP1J38ILpKLDXRUw==
 Ceph Dashboard is now available at:
 
